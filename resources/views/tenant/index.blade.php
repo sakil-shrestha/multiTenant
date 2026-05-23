@@ -2,7 +2,7 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Tenants') }}
-            <x-btn-link href="{{route('tenant.create')}}" class="ml-4 float-right">Add Tenant</x-btn-link>
+            <x-btn-link href="{{ route('tenant.create') }}" class="ml-4 float-right">Add Tenant</x-btn-link>
         </h2>
 
     </x-slot>
@@ -11,27 +11,59 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                   <table border="1px">
-                    <tr>
-                        <th>name</th>
-                        <th>email</th>
-                        <th>domain name</th>
-                        <th>action</th>
-                    </tr>
-                    @foreach($tenants as $tenant)
-                    <tr>
-                        <td>{{$tenant->name}}</td>
-                        <td>{{$tenant->email}}</td>
 
-                        <td>
-                            @foreach($tenant->domains as $domain)
-                            {{$domain->domain}}
-                            @endforeach
-                        </td>
-                        <td>edit </td>
-                    </tr>
+
+
+
+
+<div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+    <table class="w-full text-sm text-left rtl:text-right text-body">
+        <thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default">
+            <tr>
+                <th scope="col" class="px-6 py-3 font-medium">
+                    tenant name
+                </th>
+                <th scope="col" class="px-6 py-3 font-medium">
+                    Email
+                </th>
+                <th scope="col" class="px-6 py-3 font-medium">
+                    Domain name
+                </th>
+                <th scope="col" class="px-6 py-3 font-medium">
+                    Action
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach($tenants as $tenant)
+            <tr class="bg-neutral-primary border-b border-default">
+                <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                   {{$tenant->name}}
+                </th>
+                <td class="px-6 py-4">
+                    {{$tenant->email}}
+                </td>
+                <td class="px-6 py-4">
+                    @foreach($tenant->domains as $domain)
+                    {{$domain->domain}}
                     @endforeach
-                   </table>
+                </td>
+
+                <td class="px-6 py-4">
+                    <a href="#">Edit</a>
+                    <a href="#">Delete</a>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
+
+
+
                 </div>
             </div>
         </div>
