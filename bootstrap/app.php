@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
  ->withRouting(
@@ -23,7 +25,15 @@ return Application::configure(basePath: dirname(__DIR__))
     }
 )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        Authenticate::redirectUsing(function (Request $request) {
+
+        if (tenant()) {
+            return route('tenant.login');
+        }
+
+        return route('login');
+    });
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

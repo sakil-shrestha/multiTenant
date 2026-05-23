@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use App\Http\Controllers\TenantApp\ProfileController;
+use App\Http\Controllers\TenantApp\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,9 +27,21 @@ Route::middleware([
 ])->group(function () {
     //tenanct login hunni bitikai yo page ma aauxa means '/' url ma redirect hunxa
     Route::get('/', function () {
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+        return view('tenantApp.welcome');
     });
-    Route::get('/login',function(){
-        return "login page";
+
+
+    Route::get('/dashboard', function () {
+        return view('tenantApp.dashboard');
+    })->middleware(['auth', 'verified'])->name('tenant.dashboard');
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('tenant.profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('tenant.profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('tenant.profile.destroy');
+
+
+        Route::resource('user', UserController::class);
     });
+
+    require __DIR__ . '/tenant-auth.php';
 });
