@@ -39,8 +39,10 @@ Route::middleware([
         Route::patch('/profile', [ProfileController::class, 'update'])->name('tenant.profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('tenant.profile.destroy');
 
+        Route::group(['middleware' => ['role:admin']], function () {
 
-        Route::resource('user', UserController::class);
+            Route::resource('user', UserController::class);
+        });
     });
 
     require __DIR__ . '/tenant-auth.php';

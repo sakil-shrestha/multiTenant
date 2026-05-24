@@ -28,13 +28,13 @@ class TenancyServiceProvider extends ServiceProvider
                 JobPipeline::make([
                     Jobs\CreateDatabase::class,
                     Jobs\MigrateDatabase::class,
+                    Jobs\SeedDatabase::class,
 
                     //seedTenantJob is used for saving the tenant data in tenant user table when super admin register the tenant
                     // php artisan make:job SeedTenantJob
                     SeedTenantJob::class,
 
 
-                    // Jobs\SeedDatabase::class,
 
                     // Your own jobs to prepare the tenant.
                     // Provision API keys, create S3 buckets, anything you want!

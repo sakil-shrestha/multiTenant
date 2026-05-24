@@ -2,7 +2,9 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Tenants') }}
+
             <x-btn-link href="{{ route('user.create') }}" class="ml-4 float-right">Add user</x-btn-link>
+
         </h2>
 
     </x-slot>
@@ -24,6 +26,9 @@
                     User name
                 </th>
                 <th scope="col" class="px-6 py-3 font-medium">
+                    Role
+                </th>
+                <th scope="col" class="px-6 py-3 font-medium">
                     Email
                 </th>
 
@@ -41,12 +46,17 @@
                    {{$user->name}}
                 </th>
                 <td class="px-6 py-4">
+
+                    {{$user->roles->implode('name',', ')}}
+
+                </td>
+                <td class="px-6 py-4">
                     {{$user->email}}
                 </td>
 
 
                 <td class="px-6 py-4">
-                    <a href="#">Edit</a>
+                    <a href="{{route('user.edit',$user->id)}}">Edit</a>
                     <a href="#">Delete</a>
                 </td>
             </tr>

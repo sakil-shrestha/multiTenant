@@ -8,31 +8,39 @@ use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
- ->withRouting(
-    // web: __DIR__.'/../routes/web.php',
-    commands: __DIR__ . '/../routes/console.php',
-    health: '/up',
-    using: function () {
-        $centralDomains = config('tenancy.central_domains');
+    ->withRouting(
+        // web: __DIR__.'/../routes/web.php',
+        commands: __DIR__ . '/../routes/console.php',
+        health: '/up',
+        using: function () {
+            $centralDomains = config('tenancy.central_domains');
 
-        foreach ($centralDomains as $domain) {
-            Route::middleware('web')
-                ->domain($domain)
-                ->group(base_path('routes/web.php'));
+            foreach ($centralDomains as $domain) {
+                Route::middleware('web')
+                    ->domain($domain)
+                    ->group(base_path('routes/web.php'));
+            }
+
+            Route::middleware('web')->group(base_path('routes/tenant.php'));
         }
-
-        Route::middleware('web')->group(base_path('routes/tenant.php'));
-    }
-)
+    )
     ->withMiddleware(function (Middleware $middleware): void {
+
+        //this is for tenant authentication
         Authenticate::redirectUsing(function (Request $request) {
 
-        if (tenant()) {
-            return route('tenant.login');
-        }
+            if (tenant()) {
+                return route('tenant.login');
+            }
 
-        return route('login');
-    });
+            return route('login');
+        });
+
+        $middleware->alias([
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ]);
 
     })
     ->withExceptions(function (Exceptions $exceptions): void {
